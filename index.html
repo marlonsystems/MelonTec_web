@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W-PD Dispatch Center - Live Test</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>W-PD Dispatch Center - Live Test</header>
+
+<main>
+    <!-- Map Panel -->
+    <div class="panel" style="flex:2 1 700px;">
+        <h2>Map / Units Position</h2>
+        <div id="map"></div>
+        <p>Marker-Legende:</p>
+        <ul>
+            <li style="color:red;">Rot = Panic / Notfall</li>
+            <li style="color:yellow;">Gelb = Backup / Verstärkung</li>
+            <li style="color:blue;">Blau = Traffic Stop</li>
+            <li style="color:black;">Schwarz = Status 1 (nicht erreichbar)</li>
+            <li style="color:white;">Weiß = Status 2 (einsatzbereit)</li>
+            <li style="color:green;">Grün = Status 4 (alles unter Kontrolle)</li>
+            <li style="color:gray;">Grau = neutral / sonstige</li>
+        </ul>
+    </div>
+
+    <!-- Units Panel -->
+    <div class="panel">
+        <h2>Units / Vehicles</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Unit-ID</th>
+                    <th>Fahrzeugtyp</th>
+                    <th>Officer</th>
+                    <th>Status</th>
+                    <th>Current Call</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="unit-list">
+                <tr data-lat="51.505" data-lng="-0.09" data-status="2">
+                    <td>123</td>
+                    <td>SUV</td>
+                    <td>Smith</td>
+                    <td class="status-2">Ready</td>
+                    <td>None</td>
+                    <td><button onclick="dispatchUnit('123')">Dispatch</button></td>
+                </tr>
+                <tr data-lat="51.51" data-lng="-0.1" data-status="4">
+                    <td>17L2</td>
+                    <td>Motorbike</td>
+                    <td>Johnson</td>
+                    <td class="status-4">All OK</td>
+                    <td>Traffic Stop</td>
+                    <td><button onclick="dispatchUnit('17L2')">Dispatch</button></td>
+                </tr>
+                <tr data-lat="51.507" data-lng="-0.08" data-status="5">
+                    <td>45</td>
+                    <td>Patrol Car</td>
+                    <td>Lee</td>
+                    <td class="status-5">Panic</td>
+                    <td>Robbery</td>
+                    <td><button onclick="dispatchUnit('45')">Dispatch</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Calls Panel -->
+    <div class="panel">
+        <h2>Active Calls / Einsätze</h2>
+        <ul id="calls-list">
+            <li>
+                <strong>Call 001 - Robbery</strong><br>
+                Priority: High<br>
+                Location: 5th Street<br>
+                Assigned Units: 123, 45<br>
+                <button onclick="sendToUnit('123')">Send to 123</button>
+                <button onclick="sendToUnit('45')">Send to 45</button>
+            </li>
+            <li>
+                <strong>Call 002 - Traffic Disturbance</strong><br>
+                Priority: Medium<br>
+                Location: Main Avenue<br>
+                Assigned Units: 17L2<br>
+                <button onclick="sendToUnit('17L2')">Send to 17L2</button>
+            </li>
+        </ul>
+        <button onclick="createNewCall()">New Call</button>
+    </div>
+
+    <!-- Chat / Communication Panel -->
+    <div class="panel">
+        <h2>Communication / Info</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="chat-input" placeholder="Type message..." style="width:80%; padding:5px; margin-top:5px;">
+        <button onclick="sendChat()">Send</button>
+    </div>
+
+</main>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="dispatch.js"></script>
+</body>
+</html>
