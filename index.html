@@ -2,60 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W-PD Dispatch Center - Dynamic Tracking</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<link rel="stylesheet" href="style.css">
+<title>W-PD Dispatch</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<header>W-PD Dispatch Center - Dynamic Tracking</header>
-
+<header>W-PD Dispatch</header>
 <main>
-    <!-- Map Panel -->
-    <div class="panel" style="flex:2 1 700px;">
-        <h2>Map / Units Position</h2>
-        <div id="map"></div>
-        <p>Marker-Legende:</p>
-        <ul>
-            <li style="color:red;">Rot = Panic / Notfall</li>
-            <li style="color:yellow;">Gelb = Backup / Verstärkung</li>
-            <li style="color:blue;">Blau = Traffic Stop</li>
-            <li style="color:black;">Schwarz = Status 1 (nicht erreichbar)</li>
-            <li style="color:white;">Weiß = Status 2 (einsatzbereit)</li>
-            <li style="color:green;">Grün = Status 4 (alles unter Kontrolle)</li>
-            <li style="color:gray;">Grau = neutral / sonstige</li>
-        </ul>
-    </div>
-
-    <!-- Units Panel -->
-    <div class="panel">
-        <h2>Units / Vehicles</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Unit-ID</th>
-                    <th>Fahrzeugtyp</th>
-                    <th>Officer</th>
-                    <th>Status</th>
-                    <th>Current Call</th>
-                </tr>
-            </thead>
-            <tbody id="unit-list">
-            <!-- Dynamisch über JS erzeugt -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Calls Panel -->
-    <div class="panel">
-        <h2>Active Calls / Einsätze</h2>
-        <ul id="calls-list">
-        <!-- Dynamisch über JS erzeugt -->
-        </ul>
-    </div>
-
-<div class="panel">
+  <!-- Dispatch Panel -->
+  <div class="panel">
     <h2>Manual Dispatch / Auto Assign</h2>
     <label for="unit-select">Select Unit:</label>
     <select id="unit-select"></select>
@@ -63,11 +17,47 @@
     <select id="call-select"></select>
     <button onclick="manualDispatch()">Dispatch Unit</button>
     <button id="auto-btn" onclick="toggleAutoDispatch()">Auto-Assign Calls: OFF</button>
-</div>
+  </div>
 
+  <!-- Units Panel -->
+  <div class="panel">
+    <h2>Units</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Officer</th>
+          <th>Status</th>
+          <th>Current Call</th>
+        </tr>
+      </thead>
+      <tbody id="unit-list"></tbody>
+    </table>
+  </div>
+
+  <!-- Active Calls Panel -->
+  <div class="panel">
+    <h2>Active Calls</h2>
+    <ul id="calls-list"></ul>
+  </div>
+
+  <!-- Map Panel -->
+  <div class="panel">
+    <h2>Map</h2>
+    <div id="map"></div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="panel">
+    <h2>Chat</h2>
+    <div id="chat-box" class="chat-box"></div>
+    <input id="chat-input" type="text" placeholder="Type message">
+    <button onclick="sendChat()">Send</button>
+  </div>
 </main>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="dispatch_dynamic.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.5/dist/leaflet.js"></script>
+<script src="dispatch.js"></script>
 </body>
 </html>
