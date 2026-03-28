@@ -55,13 +55,15 @@
         </ul>
     </div>
 
-    <!-- Chat / Communication Panel -->
-    <div class="panel">
-        <h2>Communication / Info</h2>
-        <div class="chat-box" id="chat-box"></div>
-        <input type="text" id="chat-input" placeholder="Type message..." style="width:80%; padding:5px; margin-top:5px;">
-        <button onclick="sendChat()">Send</button>
-    </div>
+<div class="panel">
+    <h2>Manual Dispatch / Auto Assign</h2>
+    <label for="unit-select">Select Unit:</label>
+    <select id="unit-select"></select>
+    <label for="call-select">Select Call:</label>
+    <select id="call-select"></select>
+    <button onclick="manualDispatch()">Dispatch Unit</button>
+    <button id="auto-btn" onclick="toggleAutoDispatch()">Auto-Assign Calls: OFF</button>
+</div>
 
 </main>
 
