@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lyntrix RP | Roblox Roleplay Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon: #00ff88;
+  --neon2: #00ffcc;
+  --neon-dim: rgba(0,255,136,0.12);
+  --neon-glow: 0 0 10px #00ff88, 0 0 30px #00ff8855, 0 0 60px #00ff8822;
+  --bg: #030a06;
+  --bg2: #060f09;
+  --bg3: #0a1a0f;
+  --card: rgba(0,255,136,0.04);
+  --border: rgba(0,255,136,0.18);
+  --text: #c8f0d8;
+  --text-dim: #5a8a6a;
+  --danger: #ff4466;
+  --gold: #ffd700;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom Cursor */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--neon);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s;
+  box-shadow: var(--neon-glow);
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--neon);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.15s, left 0.1s, top 0.1s;
+  opacity: 0.5;
+}
+
+/* Grid BG */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Particles canvas */
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 60px;
+  height: 70px;
+  background: rgba(3,10,6,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--neon);
+  text-shadow: var(--neon-glow);
+  letter-spacing: 3px;
+}
+.nav-logo span { color: #fff; }
+
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 1px;
+  background: var(--neon);
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+.nav-links a:hover { color: var(--neon); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-discord {
+  background: var(--neon);
+  color: var(--bg);
+  padding: 8px 22px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.nav-discord:hover {
+  box-shadow: var(--neon-glow);
+  transform: translateY(-1px);
+}
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 100px 20px 60px;
+}
+
+.hero-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--neon);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(52px, 9vw, 110px);
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+.hero-title .lyn { color: #fff; }
+.hero-title .trix {
+  color: var(--neon);
+  text-shadow: var(--neon-glow);
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 560px;
+  line-height: 1.6;
+  margin-bottom: 50px;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.7s forwards;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s forwards;
+}
+
+.btn-primary {
+  background: var(--neon);
+  color: var(--bg);
+  padding: 14px 36px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+  font-family: 'Orbitron', monospace;
+}
+.btn-primary:hover {
+  box-shadow: var(--neon-glow);
+  transform: translateY(-2px);
+}
+.btn-outline {
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 14px 36px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+  font-family: 'Orbitron', monospace;
+}
+.btn-outline:hover { border-color: var(--neon); color: var(--neon); }
+
+.hero-stats {
+  display: flex; gap: 60px; margin-top: 80px;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.1s forwards;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--neon);
+  text-shadow: var(--neon-glow);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
+.scroll-arrow { width: 18px; height: 18px; border-right: 2px solid var(--neon); border-bottom: 2px solid var(--neon); transform: rotate(45deg); }
+
+/* SECTION BASE */
+section { position: relative; z-index: 1; padding: 100px 60px; }
+.section-header { text-align: center; margin-bottom: 70px; }
+.section-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--neon);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900;
+  color: #fff;
+}
+.section-title span { color: var(--neon); }
+.section-line {
+  width: 60px; height: 2px;
+  background: var(--neon);
+  margin: 20px auto 0;
+  box-shadow: var(--neon-glow);
+}
+
+/* FEATURES */
+#features { background: var(--bg2); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 36px 30px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--neon);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+.feature-card:hover { border-color: var(--neon); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,255,136,0.1); }
+.feature-card:hover::before { transform: scaleX(1); }
+
+.feature-icon {
+  font-size: 36px;
+  margin-bottom: 18px;
+}
+.feature-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.feature-desc { font-size: 15px; color: var(--text-dim); line-height: 1.6; font-weight: 400; }
+
+/* RULES */
+#rules { background: var(--bg); }
+.rules-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.rule-item {
+  display: flex; align-items: flex-start; gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 28px;
+  transition: border-color 0.2s;
+}
+.rule-item:hover { border-color: rgba(0,255,136,0.4); }
+.rule-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--neon);
+  min-width: 44px;
+  opacity: 0.6;
+}
+.rule-content h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; }
+.rule-content p { font-size: 14px; color: var(--text-dim); line-height: 1.5; font-weight: 400; }
+
+/* TEAM */
+#team { background: var(--bg2); }
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.team-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 36px 24px;
+  text-align: center;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.team-card:hover { border-color: var(--neon); transform: translateY(-4px); }
+.team-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  background: var(--neon-dim);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  transition: border-color 0.3s;
+}
+.team-card:hover .team-avatar { border-color: var(--neon); box-shadow: var(--neon-glow); }
+.team-name { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.team-role {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.role-owner { background: rgba(255,215,0,0.12); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
+.role-admin { background: rgba(255,68,102,0.12); color: var(--danger); border: 1px solid rgba(255,68,102,0.3); }
+.role-mod { background: rgba(0,255,136,0.1); color: var(--neon); border: 1px solid var(--border); }
+.role-dev { background: rgba(100,100,255,0.12); color: #8899ff; border: 1px solid rgba(100,100,255,0.3); }
+.team-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+/* BEWERBUNG */
+#bewerbung { background: var(--bg); }
+.apply-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+.apply-info { display: flex; flex-direction: column; gap: 20px; }
+.apply-info h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.apply-info p { font-size: 15px; color: var(--text-dim); line-height: 1.7; font-weight: 400; }
+.apply-reqs { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.apply-reqs li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: var(--text);
+}
+.apply-reqs li::before { content: '▸'; color: var(--neon); font-size: 12px; }
+.apply-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px 28px;
+}
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--neon); margin-bottom: 8px; font-weight: 600; }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%;
+  background: rgba(0,255,136,0.04);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: var(--neon);
+  box-shadow: 0 0 0 3px rgba(0,255,136,0.07);
+}
+.form-group select option { background: var(--bg); }
+.form-submit {
+  width: 100%;
+  background: var(--neon);
+  color: var(--bg);
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.form-submit:hover { box-shadow: var(--neon-glow); transform: translateY(-1px); }
+
+/* STAFF DASHBOARD */
+#staff-dash { background: var(--bg2); }
+.dash-note {
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  padding: 14px 28px;
+  background: var(--neon-dim);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dash-note span { color: var(--neon); }
+
+.dash-login {
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 40px 36px;
+  text-align: center;
+}
+.dash-login h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.dash-login p { font-size: 14px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.5; }
+.btn-discord {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #5865F2;
+  color: #fff;
+  padding: 13px 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  font-family: 'Rajdhani', sans-serif;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-discord:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* Staff panel (shown after "login") */
+.staff-panel { display: none; }
+.staff-panel.active { display: block; }
+
+.dash-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap; gap: 16px;
+}
+.dash-welcome { font-family: 'Orbitron', monospace; font-size: 18px; color: #fff; }
+.dash-welcome span { color: var(--neon); }
+.dash-badge {
+  background: rgba(0,255,136,0.12);
+  border: 1px solid var(--border);
+  color: var(--neon);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dash-filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: 'Rajdhani', sans-serif;
+  transition: all 0.2s;
+}
+.filter-btn.active, .filter-btn:hover { background: var(--neon); color: var(--bg); border-color: var(--neon); }
+
+.apps-list { display: flex; flex-direction: column; gap: 14px; }
+.app-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  transition: border-color 0.2s;
+}
+.app-item:hover { border-color: rgba(0,255,136,0.35); }
+.app-user { display: flex; align-items: center; gap: 14px; }
+.app-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--neon-dim);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.app-name { font-family: 'Orbitron', monospace; font-size: 14px; color: #fff; margin-bottom: 3px; }
+.app-meta { font-size: 12px; color: var(--text-dim); }
+.app-status {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.status-pending { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+.status-accepted { background: rgba(0,255,136,0.12); color: var(--neon); border: 1px solid var(--border); }
+.status-declined { background: rgba(255,68,102,0.12); color: var(--danger); border: 1px solid rgba(255,68,102,0.3); }
+
+.app-actions { display: flex; gap: 8px; }
+.app-btn {
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+}
+.app-btn:hover { opacity: 0.8; }
+.btn-accept { background: var(--neon); color: var(--bg); }
+.btn-decline { background: rgba(255,68,102,0.18); color: var(--danger); border: 1px solid rgba(255,68,102,0.3); }
+.btn-view { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border); }
+
+/* FAQ */
+#faq { background: var(--bg); }
+.faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.faq-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.faq-item.open { border-color: rgba(0,255,136,0.4); }
+.faq-q {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  gap: 16px;
+}
+.faq-q .faq-icon {
+  color: var(--neon);
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  padding: 0 24px;
+  font-weight: 400;
+}
+.faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+
+/* FOOTER */
+footer {
+  position: relative; z-index: 1;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 60px 60px 30px;
+}
+.footer-main {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 40px; flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.footer-brand .nav-logo { font-size: 26px; }
+.footer-brand p { font-size: 14px; color: var(--text-dim); margin-top: 12px; max-width: 280px; line-height: 1.6; font-weight: 400; }
+.footer-links h5 { font-family: 'Orbitron', monospace; font-size: 12px; color: var(--neon); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+.footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.2s; }
+.footer-links a:hover { color: var(--neon); }
+.footer-discord {
+  background: #5865F2;
+  color: #fff;
+  padding: 13px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex; align-items: center; gap: 10px;
+  transition: opacity 0.2s;
+}
+.footer-discord:hover { opacity: 0.85; }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.footer-bottom p { font-size: 13px; color: var(--text-dim); font-weight: 400; }
+.footer-bottom span { color: var(--neon); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 540px;
+  width: 90%;
+  position: relative;
+}
+.modal h3 { font-family: 'Orbitron', monospace; font-size: 20px; color: #fff; margin-bottom: 20px; }
+.modal p { font-size: 15px; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; font-weight: 400; }
+.modal-close {
+  position: absolute; top: 16px; right: 20px;
+  background: none; border: none; color: var(--text-dim);
+  font-size: 22px; cursor: pointer;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--neon); }
+.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.modal-tag {
+  padding: 4px 12px;
+  background: var(--neon-dim);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--neon);
+  letter-spacing: 1px;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 30px; right: 30px;
+  background: var(--bg2);
+  border: 1px solid var(--neon);
+  border-radius: 8px;
+  padding: 16px 24px;
+  color: var(--text);
+  font-size: 14px;
+  z-index: 3000;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s;
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast span { color: var(--neon); font-weight: 700; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Glitch effect on logo */
+.glitch { position: relative; }
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+}
+.glitch::before { color: #ff004466; clip: rect(0, 1200px, 30%, 0); animation: glitch1 4s infinite; }
+.glitch::after { color: #00ffcc44; clip: rect(70%, 1200px, 100%, 0); animation: glitch2 4s infinite; }
+@keyframes glitch1 {
+  0%, 90%, 100% { transform: none; }
+  91% { transform: translate(-3px, 1px); }
+  93% { transform: translate(3px, -1px); }
+  95% { transform: translate(-2px, 0); }
+}
+@keyframes glitch2 {
+  0%, 88%, 100% { transform: none; }
+  89% { transform: translate(3px, 2px); }
+  91% { transform: translate(-3px, -2px); }
+  93% { transform: translate(2px, 1px); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  section { padding: 70px 20px; }
+  .apply-container { grid-template-columns: 1fr; }
+  .hero-stats { gap: 30px; }
+  footer { padding: 40px 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="particles"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span>LYN</span>TRIX</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#rules">Regeln</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#bewerbung">Bewerben</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="https://discord.gg/NyBAEj6HV8" target="_blank" class="nav-discord">⚡ Discord</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">// Willkommen bei</p>
+  <h1 class="hero-title">
+    <div class="glitch lyn" data-text="LYN">LYN</div>
+    <div class="trix">TRIX</div>
+  </h1>
+  <p class="hero-sub">Das nächste Level des Roblox Roleplay-Erlebnisses. Immersive Welten, ein aktives Team und eine Community, die wächst.</p>
+  <div class="hero-btns">
+    <a href="https://discord.gg/NyBAEj6HV8" target="_blank" class="btn-primary">Jetzt beitreten</a>
+    <a href="#bewerbung" class="btn-outline">Bewerben</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" data-count="500">0</div>
+      <div class="stat-label">Mitglieder</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-count="24">0</div>
+      <div class="stat-label">Staff</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-count="99">0</div>
+      <div class="stat-label">Uptime %</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header reveal">
+    <p class="section-label">// Was uns ausmacht</p>
+    <h2 class="section-title">Unsere <span>Features</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎮</div>
+      <h3 class="feature-title">Roblox RP</h3>
+      <p class="feature-desc">Tauche ein in ein realistisches Roleplay-System auf Roblox. Jederzeit erweiterbar auf FiveM.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">⚙️</div>
+      <h3 class="feature-title">Aktive Entwicklung</h3>
+      <p class="feature-desc">Regelmäßige Updates, neue Systeme und ständige Verbesserungen durch unser Dev-Team.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🛡️</div>
+      <h3 class="feature-title">Faires Moderation</h3>
+      <p class="feature-desc">Unser erfahrenes Mod-Team sorgt für eine faire und angenehme Spielumgebung für alle.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">💬</div>
+      <h3 class="feature-title">Discord Community</h3>
+      <p class="feature-desc">Ein übersichtlicher Discord-Server mit Support, Events, Ankündigungen und mehr.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🚓</div>
+      <h3 class="feature-title">Realismus</h3>
+      <p class="feature-desc">Realistische Fraktionen wie Polizei, Rettungsdienst, Kriminelle und Bürger.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🏆</div>
+      <h3 class="feature-title">Events & Rewards</h3>
+      <p class="feature-desc">Regelmäßige Server-Events mit exklusiven Belohnungen für aktive Spieler.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="section-header reveal">
+    <p class="section-label">// Wichtig zu wissen</p>
+    <h2 class="section-title">Server<span>regeln</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="rules-container">
+    <div class="rule-item reveal">
+      <div class="rule-num">01</div>
+      <div class="rule-content">
+        <h4>Respekt & Anstand</h4>
+        <p>Behandle jeden Spieler mit Respekt. Beleidigungen, Diskriminierung oder Harassment werden nicht toleriert.</p>
+      </div>
+    </div>
+    <div class="rule-item reveal">
+      <div class="rule-num">02</div>
+      <div class="rule-content">
+        <h4>Kein RDM / VDM</h4>
+        <p>Random Deathmatch und Vehicle Deathmatch sind verboten. Jede Aktion muss einen RP-Grund haben.</p>
+      </div>
+    </div>
+    <div class="rule-item reveal">
+      <div class="rule-num">03</div>
+      <div class="rule-content">
+        <h4>Charakter bleiben (In-Character)</h4>
+        <p>Im Spiel bitte immer im Charakter bleiben. Out-of-Character-Kommunikation nur in den dafür vorgesehenen Kanälen.</p>
+      </div>
+    </div>
+    <div class="rule-item reveal">
+      <div class="rule-num">04</div>
+      <div class="rule-content">
+        <h4>Kein Cheating / Exploiting</h4>
+        <p>Jegliche Form von Cheats, Exploits oder Bugs auszunutzen führt zum sofortigen Bann.</p>
+      </div>
+    </div>
+    <div class="rule-item reveal">
+      <div class="rule-num">05</div>
+      <div class="rule-content">
+        <h4>Staff-Anweisungen befolgen</h4>
+        <p>Anweisungen des Staffteams sind zu befolgen. Bei Unstimmigkeiten bitte ein Ticket öffnen.</p>
+      </div>
+    </div>
+    <div class="rule-item reveal">
+      <div class="rule-num">06</div>
+      <div class="rule-content">
+        <h4>Powergaming verboten</h4>
+        <p>Das Ausnutzen von Spielmechaniken zum eigenen Vorteil auf unfaire Weise ist nicht gestattet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-header reveal">
+    <p class="section-label">// Hinter Lyntrix</p>
+    <h2 class="section-title">Unser <span>Team</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-avatar">👑</div>
+      <div class="team-name">Gründer</div>
+      <span class="team-role role-owner">Owner</span>
+      <p class="team-desc">Leitet Lyntrix und hat die Vision für den Server.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-avatar">🛡️</div>
+      <div class="team-name">Admin #1</div>
+      <span class="team-role role-admin">Admin</span>
+      <p class="team-desc">Zuständig für die Serververwaltung und Regeln.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-avatar">⚔️</div>
+      <div class="team-name">Moderator #1</div>
+      <span class="team-role role-mod">Moderator</span>
+      <p class="team-desc">Sorgt für Ordnung und hilft bei Problemen.</p>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-avatar">💻</div>
+      <div class="team-name">Developer</div>
+      <span class="team-role role-dev">Developer</span>
+      <p class="team-desc">Entwickelt und verbessert den Server kontinuierlich.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEWERBUNG -->
+<section id="bewerbung">
+  <div class="section-header reveal">
+    <p class="section-label">// Werde Teil des Teams</p>
+    <h2 class="section-title">Staff <span>Bewerbung</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="apply-container">
+    <div class="apply-info reveal">
+      <div>
+        <h3>Werde Teil von Lyntrix</h3>
+        <p>Du willst aktiv mithelfen, den Server zu einem besseren Ort zu machen? Dann bewirb dich jetzt für unser Staff-Team!</p>
+      </div>
+      <div>
+        <h3 style="font-size:16px; margin-bottom:12px;">Voraussetzungen</h3>
+        <ul class="apply-reqs">
+          <li>Mindest-Alter: 14 Jahre</li>
+          <li>Aktiv im Discord & Spiel</li>
+          <li>Keine aktiven Strafen/Bans</li>
+          <li>Teamfähig und respektvoll</li>
+          <li>Regeln vollständig kennen</li>
+          <li>Mind. 1 Woche Mitglied sein</li>
+        </ul>
+      </div>
+    </div>
+    <div class="apply-form reveal">
+      <div class="form-group">
+        <label>Discord Username</label>
+        <input type="text" id="ap-discord" placeholder="dein_name#0000">
+      </div>
+      <div class="form-group">
+        <label>Roblox Username</label>
+        <input type="text" id="ap-roblox" placeholder="DeinRobloxName">
+      </div>
+      <div class="form-group">
+        <label>Gewünschte Position</label>
+        <select id="ap-position">
+          <option value="">Wähle eine Position...</option>
+          <option>Moderator</option>
+          <option>Support</option>
+          <option>Event-Manager</option>
+          <option>Developer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Warum möchtest du Staff werden?</label>
+        <textarea id="ap-reason" rows="4" placeholder="Erzähl uns von dir..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Alter</label>
+        <input type="number" id="ap-age" placeholder="z.B. 16" min="10" max="99">
+      </div>
+      <button class="form-submit" onclick="submitApplication()">Bewerbung absenden ▸</button>
+    </div>
+  </div>
+</section>
+
+<!-- STAFF DASHBOARD -->
+<section id="staff-dash">
+  <div class="section-header reveal">
+    <p class="section-label">// Nur für Staff</p>
+    <h2 class="section-title">Staff <span>Dashboard</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="dash-note reveal">
+    <span>🔒 Nur für Discord-Mitglieder mit der Rolle „Staff Verwaltung" sichtbar</span>
+  </div>
+
+  <!-- LOGIN VIEW -->
+  <div id="dashLogin" class="dash-login reveal">
+    <h3>🔐 Staff Login</h3>
+    <p>Verbinde dich mit Discord, um auf das Staff-Dashboard zuzugreifen. Nur Mitglieder mit der Rolle <strong style="color:var(--neon)">Staff Verwaltung</strong> erhalten Zugang.</p>
+    <button class="btn-discord" onclick="staffLogin()">
+      <svg width="20" height="16" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5 0.5a40.7 40.7 0 0 0-1.8 3.7A54.2 54.2 0 0 0 27.3 4.2 40.9 40.9 0 0 0 25.5.5 58.4 58.4 0 0 0 10.9 4.9C1.6 18.7-1 32.2.3 45.5a58.8 58.8 0 0 0 17.9 9 44.1 44.1 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9l1.4-1.1c11.6 5.4 24.2 5.4 35.7 0l1.5 1.1a38.2 38.2 0 0 1-6 2.9c1.1 2.2 2.4 4.3 3.8 6.2a58.7 58.7 0 0 0 17.9-9c1.5-15.6-2.5-29-10.2-40.6zM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2-2.8 7.2-6.4 7.2zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2-2.8 7.2-6.4 7.2z"/></svg>
+      Mit Discord einloggen
+    </button>
+  </div>
+
+  <!-- PANEL VIEW -->
+  <div id="staffPanel" class="staff-panel" style="max-width:900px; margin:0 auto;">
+    <div class="dash-header">
+      <div class="dash-welcome">Willkommen, <span id="staffName">StaffMember</span> 👋</div>
+      <div class="dash-badge">✓ Staff Verwaltung</div>
+    </div>
+    <div class="dash-filters">
+      <button class="filter-btn active" onclick="filterApps('all', this)">Alle</button>
+      <button class="filter-btn" onclick="filterApps('pending', this)">Ausstehend</button>
+      <button class="filter-btn" onclick="filterApps('accepted', this)">Angenommen</button>
+      <button class="filter-btn" onclick="filterApps('declined', this)">Abgelehnt</button>
+    </div>
+    <div class="apps-list" id="appsList"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-header reveal">
+    <p class="section-label">// Häufige Fragen</p>
+    <h2 class="section-title">FAQ</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="faq-container">
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Wie trete ich dem Server bei?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Tritt einfach unserem Discord bei und folge den Anweisungen im #willkommen-Kanal. Dort findest du alles was du brauchst um loszulegen!</div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Ist Lyntrix kostenlos?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Ja! Lyntrix ist vollständig kostenlos zu spielen. Du brauchst lediglich ein Roblox-Konto um starten zu können.</div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Gibt es auch FiveM in Zukunft?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Ja, eine Erweiterung auf FiveM ist geplant! Wir starten mit Roblox und werden den Server mit der Zeit ausbauen. Bleib auf dem Discord auf dem Laufenden.</div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Wie kann ich mich beschweren oder reporten?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Öffne ein Support-Ticket in unserem Discord. Unser Team wird sich so schnell wie möglich um dein Anliegen kümmern.</div>
+    </div>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Wie lange dauert eine Bewerbung?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Bewerbungen werden in der Regel innerhalb von 24-72 Stunden bearbeitet. Du wirst per Discord-Nachricht über das Ergebnis informiert.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>LYN</span>TRIX</div>
+      <p>Das nächste Level des Roblox Roleplay-Erlebnisses. Bald auch auf FiveM.</p>
+    </div>
+    <div class="footer-links">
+      <h5>Navigation</h5>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#rules">Regeln</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#bewerbung">Bewerben</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-links" style="margin-bottom:20px;">
+        <h5>Community</h5>
+      </div>
+      <a href="https://discord.gg/NyBAEj6HV8" target="_blank" class="footer-discord">
+        <svg width="20" height="16" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5 0.5a40.7 40.7 0 0 0-1.8 3.7A54.2 54.2 0 0 0 27.3 4.2 40.9 40.9 0 0 0 25.5.5 58.4 58.4 0 0 0 10.9 4.9C1.6 18.7-1 32.2.3 45.5a58.8 58.8 0 0 0 17.9 9 44.1 44.1 0 0 0 3.8-6.2 38.3 38.3 0 0 1-6-2.9l1.4-1.1c11.6 5.4 24.2 5.4 35.7 0l1.5 1.1a38.2 38.2 0 0 1-6 2.9c1.1 2.2 2.4 4.3 3.8 6.2a58.7 58.7 0 0 0 17.9-9c1.5-15.6-2.5-29-10.2-40.6zM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2-2.8 7.2-6.4 7.2zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2-2.8 7.2-6.4 7.2z"/></svg>
+        Discord beitreten
+      </a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span>Lyntrix RP</span>. Alle Rechte vorbehalten.</p>
+    <p>Made with <span>♥</span> für die Community</p>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="appModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">Bewerbung Details</h3>
+    <p id="modalContent"></p>
+    <div class="modal-tags" id="modalTags"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============= CURSOR =============
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) *.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// ============= PARTICLES =============
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = window.innerWidth;
+let H = canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+const pts = Array.from({length: 60}, () => ({
+  x: Math.random() * W, y: Math.random() * H,
+  vx: (Math.random() - 0.5) * 0.4,
+  vy: (Math.random() - 0.5) * 0.4,
+  r: Math.random() * 1.5 + 0.5
+}));
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W;
+    if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H;
+    if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,255,136,0.4)';
+    ctx.fill();
+  });
+  pts.forEach((a, i) => {
+    pts.slice(i+1).forEach(b => {
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(0,255,136,${0.08 * (1 - d/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ============= SCROLL REVEAL =============
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => io.observe(el));
+
+// ============= COUNT UP =============
+const statEls = document.querySelectorAll('[data-count]');
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const target = +el.getAttribute('data-count');
+      const suffix = el.textContent.replace(/[0-9]/g, '').trim();
+      let cur = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = Math.round(cur) + suffix;
+        if (cur >= target) clearInterval(timer);
+      }, 16);
+      statsObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+statEls.forEach(el => statsObs.observe(el));
+
+// ============= FAQ =============
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ============= TOAST =============
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ============= APPLICATION =============
+const applications = [
+  { id: 1, user: 'xX_ShadowKing_Xx', discord: 'shadowking#1337', role: 'Moderator', age: 17, reason: 'Ich möchte dem Team helfen und die Community schützen. Ich bin seit Anfang dabei.', status: 'pending', emoji: '🎮', date: '12.01.2025' },
+  { id: 2, user: 'LunaFrostRP', discord: 'lunafrost#4829', role: 'Support', age: 16, reason: 'Ich helfe gerne anderen Spielern und kenne alle Regeln auswendig.', status: 'accepted', emoji: '❄️', date: '10.01.2025' },
+  { id: 3, user: 'TechDevPro', discord: 'techdev#0001', role: 'Developer', age: 19, reason: 'Ich programmiere seit 4 Jahren und würde gerne zum Server beitragen.', status: 'declined', emoji: '💻', date: '08.01.2025' },
+  { id: 4, user: 'NightWolf99', discord: 'nightwolf#2255', role: 'Event-Manager', age: 15, reason: 'Ich liebe es Events zu planen und möchte die Community begeistern!', status: 'pending', emoji: '🐺', date: '13.01.2025' },
+];
+
+function renderApps(filter = 'all') {
+  const list = document.getElementById('appsList');
+  const filtered = filter === 'all' ? applications : applications.filter(a => a.status === filter);
+  list.innerHTML = filtered.map(a => `
+    <div class="app-item" data-id="${a.id}">
+      <div class="app-user">
+        <div class="app-avatar">${a.emoji}</div>
+        <div>
+          <div class="app-name">${a.user}</div>
+          <div class="app-meta">${a.discord} • ${a.role} • ${a.date}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span class="app-status status-${a.status}">${a.status === 'pending' ? '⏳ Ausstehend' : a.status === 'accepted' ? '✓ Angenommen' : '✗ Abgelehnt'}</span>
+        <div class="app-actions">
+          <button class="app-btn btn-view" onclick="viewApp(${a.id})">Details</button>
+          ${a.status === 'pending' ? `
+            <button class="app-btn btn-accept" onclick="changeStatus(${a.id},'accepted')">✓</button>
+            <button class="app-btn btn-decline" onclick="changeStatus(${a.id},'declined')">✗</button>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterApps(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApps(type);
+}
+
+function changeStatus(id, status) {
+  const app = applications.find(a => a.id === id);
+  if (app) {
+    app.status = status;
+    renderApps('all');
+    showToast(`<span>${app.user}</span> wurde ${status === 'accepted' ? '<span>angenommen</span>' : '<span style="color:var(--danger)">abgelehnt</span>'} ✓`);
+  }
+}
+
+function viewApp(id) {
+  const app = applications.find(a => a.id === id);
+  if (!app) return;
+  document.getElementById('modalTitle').textContent = `${app.emoji} ${app.user}`;
+  document.getElementById('modalContent').innerHTML = `
+    <strong style="color:var(--neon)">Bewerbungsgrund:</strong><br>${app.reason}<br><br>
+    <strong style="color:var(--neon)">Discord:</strong> ${app.discord}<br>
+    <strong style="color:var(--neon)">Alter:</strong> ${app.age} Jahre
+  `;
+  document.getElementById('modalTags').innerHTML = `
+    <span class="modal-tag">${app.role}</span>
+    <span class="modal-tag">${app.date}</span>
+    <span class="modal-tag">${app.status}</span>
+  `;
+  document.getElementById('appModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('appModal').classList.remove('active');
+}
+
+// ============= STAFF LOGIN (DEMO) =============
+const staffNames = ['StaffMember', 'CoolMod_42', 'XadminPro'];
+function staffLogin() {
+  const name = staffNames[Math.floor(Math.random() * staffNames.length)];
+  document.getElementById('staffName').textContent = name;
+  document.getElementById('dashLogin').style.display = 'none';
+  document.getElementById('staffPanel').classList.add('active');
+  renderApps();
+  showToast(`<span>Eingeloggt als ${name}</span> 🎉`);
+}
+
+// ============= FORM SUBMIT =============
+function submitApplication() {
+  const discord = document.getElementById('ap-discord').value.trim();
+  const roblox = document.getElementById('ap-roblox').value.trim();
+  const pos = document.getElementById('ap-position').value;
+  const reason = document.getElementById('ap-reason').value.trim();
+  const age = document.getElementById('ap-age').value;
+  if (!discord || !roblox || !pos || !reason || !age) {
+    showToast('⚠️ Bitte fülle <span>alle Felder</span> aus!');
+    return;
+  }
+  applications.push({
+    id: Date.now(),
+    user: roblox,
+    discord: discord,
+    role: pos,
+    age: parseInt(age),
+    reason: reason,
+    status: 'pending',
+    emoji: '📝',
+    date: new Date().toLocaleDateString('de-DE')
+  });
+  showToast(`<span>Bewerbung gesendet!</span> Wir melden uns bald 🚀`);
+  document.getElementById('ap-discord').value = '';
+  document.getElementById('ap-roblox').value = '';
+  document.getElementById('ap-position').value = '';
+  document.getElementById('ap-reason').value = '';
+  document.getElementById('ap-age').value = '';
+}
+
+// Close modal on overlay click
+document.getElementById('appModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
